@@ -748,7 +748,7 @@ document.getElementById('pieceQuantityInput').addEventListener('keypress', funct
 
 async function submitToGoogleSheet() {
     const counter = document.getElementById('counterSelect').value;
-    const LOCATION = 'CR1         ';  // Hardcoded location for this page
+    const LOCATION = 'CR1';  // Hardcoded location for this page
     
     if (!counter) {
         showCustomAlert('请选择盘点人员！');
