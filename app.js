@@ -2,7 +2,7 @@
 const products = [
     {
         barcode: "10110",
-        name: "鱼饺 FISH DUMPLING",
+        name: "鱼饺 10粒 FISH DUMPLING 10's",
         packaging: "10's/tray",
         skus: [
             { type: "PKT", name: "鱼饺 FISH DUMPLING", packaging: "10's/tray", itemCode: "10110" }
@@ -11,7 +11,7 @@ const products = [
     },
     {
         barcode: "10210",
-        name: "菜卷 FISH VEGETABLE ROLL",
+        name: "菜卷 10粒 FISH VEGETABLE ROLL 10's",
         packaging: "10's/tray",
         skus: [
             { type: "PKT", name: "菜卷 FISH VEGETABLE ROLL", packaging: "10's/tray", itemCode: "10210" }
@@ -20,7 +20,7 @@ const products = [
     },
     {
         barcode: "10310",
-        name: "鱼卷 FISH ROLL",
+        name: "鱼卷 10粒 FISH ROLL 10's",
         packaging: "10's/tray",
         skus: [
             { type: "PKT", name: "鱼卷 FISH ROLL", packaging: "10's/tray", itemCode: "10310" }
@@ -29,7 +29,7 @@ const products = [
     },
     {
         barcode: "10410",
-        name: "鱼片 FISH SLICE",
+        name: "鱼片 10粒 FISH SLICE 10's",
         packaging: "10's/tray",
         skus: [
             { type: "PKT", name: "鱼片 FISH SLICE", packaging: "10's/tray", itemCode: "10410" }
@@ -38,7 +38,7 @@ const products = [
     },
     {
         barcode: "10100",
-        name: "鱼饺 FISH DUMPLING",
+        name: "鱼饺 20粒 FISH DUMPLING 20's",
         packaging: "20's x 20pkt",
         skus: [
             { type: "CTN", name: "鱼饺 FISH DUMPLING", packaging: "20's x 20pkt", itemCode: "10100" },
@@ -48,7 +48,7 @@ const products = [
     },
     {
         barcode: "10200",
-        name: "菜卷 FISH VEGETABLE ROLL",
+        name: "菜卷 20粒 FISH VEGETABLE ROLL 20's",
         packaging: "20's x 20pkt",
         skus: [
             { type: "CTN", name: "菜卷 FISH VEGETABLE ROLL", packaging: "20's x 20pkt", itemCode: "10200" },
@@ -58,7 +58,7 @@ const products = [
     },
     {
         barcode: "10300",
-        name: "鱼卷 FISH ROLL",
+        name: "鱼卷 20粒 FISH ROLL 20's",
         packaging: "20's x 20pkt",
         skus: [
             { type: "CTN", name: "鱼卷 FISH ROLL", packaging: "20's x 20pkt", itemCode: "10300" },
@@ -68,7 +68,7 @@ const products = [
     },
     {
         barcode: "10400",
-        name: "鱼片 FISH SLICE",
+        name: "鱼片 20粒 FISH SLICE 20's",
         packaging: "20's x 20pkt",
         skus: [
             { type: "CTN", name: "鱼片 FISH SLICE", packaging: "20's x 20pkt", itemCode: "10400" },
@@ -78,7 +78,7 @@ const products = [
     },
     {
         barcode: "10800",
-        name: "鱼肉 FISH PASTE",
+        name: "鱼肉 FISH PASTE 2KGx8pkt",
         packaging: "2kg x 8pkt",
         skus: [
             { type: "CTN", name: "鱼肉 FISH PASTE", packaging: "2kg x 8pkt", itemCode: "10800" },
@@ -98,7 +98,7 @@ const products = [
     },
     {
         barcode: "10802",
-        name: "鱼肉 FISH PASTE",
+        name: "鱼肉 FISH PASTE 200g",
         packaging: "200g/box",
         skus: [
             { type: "PKT", name: "鱼肉 FISH PASTE", packaging: "200g/box", itemCode: "10802" }
@@ -107,7 +107,7 @@ const products = [
     },
     {
         barcode: "24030",
-        name: "香菇丸 MUSHROOM BALL (13g)",
+        name: "香菇丸 10粒 MUSHROOM BALL 10's",
         packaging: "10's/tray",
         skus: [
             { type: "PKT", name: "香菇丸 MUSHROOM BALL (13g)", packaging: "10's/tray", itemCode: "24030" }
@@ -116,7 +116,7 @@ const products = [
     },
     {
         barcode: "10250.1",
-        name: "菜卷 FISH VEGETABLE ROLL",
+        name: "菜卷 50粒 FISH VEGETABLE ROLL 50's",
         packaging: "50's x 20box",
         skus: [
             { type: "CTN", name: "菜卷 FISH VEGETABLE ROLL", packaging: "50's x 20box", itemCode: "10250.1" },
@@ -126,7 +126,7 @@ const products = [
     },
     {
         barcode: "10350.1",
-        name: "鱼卷 FISH ROLL",
+        name: "鱼卷 50粒 FISH ROLL 50's",
         packaging: "50's x 20box",
         skus: [
             { type: "CTN", name: "鱼卷 FISH ROLL", packaging: "50's x 20box", itemCode: "10350.1" },
@@ -136,7 +136,7 @@ const products = [
     },
     {
         barcode: "10450.1",
-        name: "鱼片 FISH SLICE",
+        name: "鱼片 50粒 FISH SLICE 50's",
         packaging: "50's x 20box",
         skus: [
             { type: "CTN", name: "鱼片 FISH SLICE", packaging: "50's x 20box", itemCode: "10450.1" },
