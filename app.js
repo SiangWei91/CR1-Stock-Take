@@ -1,296 +1,251 @@
 // 示例产品数据
 const products = [
     {
-        barcode: "50272",
-        name: "企鹅 PENGUIN STYLE",
-        packaging: "500g x 20pkt",
+        barcode: "10110",
+        name: "鱼饺 FISH DUMPLING",
+        packaging: "10's/tray",
         skus: [
-            { type: "CTN", name: "企鹅 PENGUIN STYLE", packaging: "500g x 20pkt", itemCode: "50272" },
-            { type: "PKT", name: "企鹅 PENGUIN STYLE", packaging: "500g/pkt", itemCode: "50273" }
+            { type: "PKT", name: "鱼饺 FISH DUMPLING", packaging: "10's/tray", itemCode: "10110" }
         ],
         scanned: false
     },
     {
-        barcode: "50284",
-        name: "竹蟹棒 CRAB FLAVOURED STICK FISH ROLL",
-        packaging: "500g x 20pkt",
+        barcode: "10210",
+        name: "菜卷 FISH VEGETABLE ROLL",
+        packaging: "10's/tray",
         skus: [
-            { type: "CTN", name: "竹蟹棒 CRAB FLAVOURED STICK FISH ROLL", packaging: "500g x 20pkt", itemCode: "50284" },
-            { type: "PKT", name: "竹蟹棒  CRAB FLAVOURED STICK FISH ROLL", packaging: "500g/pkt", itemCode: "50285" }
+            { type: "PKT", name: "菜卷 FISH VEGETABLE ROLL", packaging: "10's/tray", itemCode: "10210" }
         ],
         scanned: false
     },
     {
-        barcode: "50282",
-        name: "棒棒卷 KANI MAKI",
-        packaging: "500g x 20pkt",
+        barcode: "10310",
+        name: "鱼卷 FISH ROLL",
+        packaging: "10's/tray",
         skus: [
-            { type: "CTN", name: "棒棒卷 KANI MAKI", packaging: "500g x 20pkt", itemCode: "50282" },
-            { type: "PKT", name: "棒棒卷 KANI MAKI", packaging: "500g/pkt", itemCode: "50283" }
+            { type: "PKT", name: "鱼卷 FISH ROLL", packaging: "10's/tray", itemCode: "10310" }
         ],
         scanned: false
     },
     {
-        barcode: "50278",
-        name: "卡通鱼饼 ZUZU FISH CAKE",
-        packaging: "500g x 20pkt",
+        barcode: "10410",
+        name: "鱼片 FISH SLICE",
+        packaging: "10's/tray",
         skus: [
-            { type: "CTN", name: "卡通鱼饼 ZUZU FISH CAKE", packaging: "500g x 20pkt", itemCode: "50278" },
-            { type: "PKT", name: "卡通鱼饼 ZUZU FISH CAKE", packaging: "500g/pkt", itemCode: "50279" }
+            { type: "PKT", name: "鱼片 FISH SLICE", packaging: "10's/tray", itemCode: "10410" }
         ],
         scanned: false
     },
     {
-        barcode: "40648",
-        name: "彩虹鱼饼 FISH CAKE",
-        packaging: "500g x 20pkt",
+        barcode: "10100",
+        name: "鱼饺 FISH DUMPLING",
+        packaging: "20's x 20pkt",
         skus: [
-            { type: "CTN", name: "彩虹鱼饼 FISH CAKE", packaging: "500g x 20pkt", itemCode: "40648" },
-            { type: "PKT", name: "彩虹鱼饼 FISH CAKE", packaging: "500g/pkt", itemCode: "40649" }
+            { type: "CTN", name: "鱼饺 FISH DUMPLING", packaging: "20's x 20pkt", itemCode: "10100" },
+            { type: "PKT", name: "鱼饺 FISH DUMPLING", packaging: "20's", itemCode: "10120" }
         ],
         scanned: false
     },
     {
-        barcode: "50264",
-        name: "(泰)菜丸 VEGETABLE FISH BALL",
-        packaging: "500g x 20pkt",
+        barcode: "10200",
+        name: "菜卷 FISH VEGETABLE ROLL",
+        packaging: "20's x 20pkt",
         skus: [
-            { type: "CTN", name: "VEGETABLE FISH BALL", packaging: "500g x 20pkt", itemCode: "50264" },
-            { type: "PKT", name: "VEGETABLE FISH BALL", packaging: "500g/pkt", itemCode: "50265" }
+            { type: "CTN", name: "菜卷 FISH VEGETABLE ROLL", packaging: "20's x 20pkt", itemCode: "10200" },
+            { type: "PKT", name: "菜卷 FISH VEGETABLE ROLL", packaging: "20's", itemCode: "10220" }
         ],
         scanned: false
     },
     {
-        barcode: "50266",
-        name: "熊猫鱼饼 PANDY FISH",
-        packaging: "500g x 20pkt",
+        barcode: "10300",
+        name: "鱼卷 FISH ROLL",
+        packaging: "20's x 20pkt",
         skus: [
-            { type: "CTN", name: "熊猫鱼饼 PANDY FISH", packaging: "500g x 20pkt", itemCode: "50266" },
-            { type: "PKT", name: "熊猫鱼饼 PANDY FISH", packaging: "500g/pkt", itemCode: "50267" }
+            { type: "CTN", name: "鱼卷 FISH ROLL", packaging: "20's x 20pkt", itemCode: "10300" },
+            { type: "PKT", name: "鱼卷 FISH ROLL", packaging: "20's", itemCode: "10320" }
         ],
         scanned: false
     },
     {
-        barcode: "50268",
-        name: "可爱鱼 CARTOON FISH",
-        packaging: "500g x 20pkt",
+        barcode: "10400",
+        name: "鱼片 FISH SLICE",
+        packaging: "20's x 20pkt",
         skus: [
-            { type: "CTN", name: "CARTOON FISH", packaging: "500g x 20pkt", itemCode: "50268" },
-            { type: "PKT", name: "CARTOON FISH", packaging: "500g/pkt", itemCode: "50269" }
+            { type: "CTN", name: "鱼片 FISH SLICE", packaging: "20's x 20pkt", itemCode: "10400" },
+            { type: "PKT", name: "鱼片 FISH SLICE", packaging: "20's", itemCode: "10420" }
         ],
         scanned: false
     },
     {
-        barcode: "50270",
-        name: "果香鱼饼 FRUITY FISH CAKE",
-        packaging: "500g x 20pkt",
+        barcode: "10800",
+        name: "鱼肉 FISH PASTE",
+        packaging: "2kg x 8pkt",
         skus: [
-            { type: "CTN", name: "FRUITY FISH CAKE", packaging: "500g x 20pkt", itemCode: "50270" },
-            { type: "PKT", name: "FRUITY FISH CAKE", packaging: "500g/pkt", itemCode: "50271" }
+            { type: "CTN", name: "鱼肉 FISH PASTE", packaging: "2kg x 8pkt", itemCode: "10800" },
+            { type: "PKT", name: "鱼肉 FROZEN FISH PASTE", packaging: "2kg", itemCode: "10803" }
         ],
         scanned: false
     },
     {
-        barcode: "50200",
-        name: "虾蕾 SHRIMP BOMB",
-        packaging: "250g x 40pkt",
-        skus: [
-            { type: "CTN", name: "虾蕾 SHRIMP BOMB", packaging: "250g x 40pkt", itemCode: "50200" },
-            { type: "PKT", name: "虾蕾 SHRIMP BOMB", packaging: "250g/pkt", itemCode: "50201" }
-        ],
-        scanned: false
-    },
-    {
-        barcode: "50702",
-        name: "春卷 SPRING ROLL",
-        packaging: "8pkts x 10's",
-        skus: [
-            { type: "CTN", name: "春卷 SPRING ROLL", packaging: "8pkts x 10's", itemCode: "50702" },
-            { type: "PKT", name: "春卷 SPRING ROLL", packaging: "10's/pkt", itemCode: "50703" }
-        ],
-        scanned: false
-    },
-    {
-        barcode: "61006",
-        name: "(E)四色卷 FOUR COLOUR ROLL",
-        packaging: "5's x 15pkt",
-        skus: [
-            { type: "CTN", name: "(E)四色卷 FOUR COLOUR ROLL", packaging: "5's x 15pkt", itemCode: "61006" },
-            { type: "PKT", name: "(E)四色卷 FOUR COLOUR ROLL", packaging: "5's/pkt", itemCode: "62006" }
-        ],
-        scanned: false
-    },
-    {
-        barcode: "10903",
-        name: "苏东丸 CUTTLEFISH BALL",
+        barcode: "10810",
+        name: "苏东膏 CUTTLEFISH PASTE",
         packaging: "1kg x 10pkt",
         skus: [
-            { type: "CTN", name: "苏东丸 CUTTLEFISH BALL", packaging: "1kg x 10pkt", itemCode: "NA1" },
-            { type: "PKT", name: "苏东丸 CUTTLEFISH BALL", packaging: "1kg/pkt", itemCode: "10903" }
+            { type: "CTN", name: "苏东膏 CUTTLEFISH PASTE", packaging: "1kg x 10pkt", itemCode: "10810" },
+            { type: "PKT", name: "苏东膏 CUTTLEFISH PASTE", packaging: "1kg/pkt", itemCode: "10811" }
         ],
         scanned: false
     },
     {
-        barcode: "25000",
-        name: "海鲜条 SEAFOOD STICK",
-        packaging: "250g x 40pkt",
+        barcode: "10802",
+        name: "鱼肉 FISH PASTE",
+        packaging: "200g/box",
         skus: [
-            { type: "CTN", name: "海鲜条 SEAFOOD STICK", packaging: "250g x 40pkt", itemCode: "25000" },
-            { type: "PKT", name: "海鲜条 SEAFOOD STICK", packaging: "250g/pkt", itemCode: "25001" }
+            { type: "PKT", name: "鱼肉 FISH PASTE", packaging: "200g/box", itemCode: "10802" }
         ],
         scanned: false
     },
     {
-        barcode: "30100",
-        name: "干贝 SURIMI SCALLOP",
-        packaging: "50's x 10pkt",
+        barcode: "24030",
+        name: "香菇丸 MUSHROOM BALL (13g)",
+        packaging: "10's/tray",
         skus: [
-            { type: "CTN", name: "干贝 SURIMI SCALLOP", packaging: "50's x 10pkt", itemCode: "30100" },
-            { type: "PKT", name: "干贝 SURIMI SCALLOP", packaging: "50's/pkt", itemCode: "30101" }
+            { type: "PKT", name: "香菇丸 MUSHROOM BALL (13g)", packaging: "10's/tray", itemCode: "24030" }
         ],
         scanned: false
     },
     {
-        barcode: "40628",
-        name: "蟹味柳 KANIMI CHUNK",
-        packaging: "180g x 20pkt",
+        barcode: "10250.1",
+        name: "菜卷 FISH VEGETABLE ROLL",
+        packaging: "50's x 20box",
         skus: [
-            { type: "CTN", name: "蟹味柳 KANIMI CHUNK", packaging: "180g x 20pkt", itemCode: "40628" },
-            { type: "PKT", name: "蟹味柳 KANIMI CHUNK", packaging: "180g/pkt", itemCode: "40629" }
+            { type: "CTN", name: "菜卷 FISH VEGETABLE ROLL", packaging: "50's x 20box", itemCode: "10250.1" },
+            { type: "PKT", name: "菜卷 FISH VEGETABLE ROLL", packaging: "50's", itemCode: "10250" }
         ],
         scanned: false
     },
     {
-        barcode: "25010",
-        name: "人造蟹条 FLAVOURED CRAB STICKS",
-        packaging: "250g x 40pkt",
+        barcode: "10350.1",
+        name: "鱼卷 FISH ROLL",
+        packaging: "50's x 20box",
         skus: [
-            { type: "CTN", name: "人造蟹条 FLAVOURED CRAB STICKS", packaging: "250g x 40pkt", itemCode: "25010" },
-            { type: "PKT", name: "人造蟹条 FLAVOURED CRAB STICKS", packaging: "250g/pkt", itemCode: "25011" }
+            { type: "CTN", name: "鱼卷 FISH ROLL", packaging: "50's x 20box", itemCode: "10350.1" },
+            { type: "PKT", name: "鱼卷 FISH ROLL", packaging: "50's", itemCode: "10350" }
         ],
         scanned: false
     },
     {
-        barcode: "40600",
-        name: "人造蟹钳 IMITATION CRAB CLAW",
-        packaging: "250g x 30pkt",
+        barcode: "10450.1",
+        name: "鱼片 FISH SLICE",
+        packaging: "50's x 20box",
         skus: [
-            { type: "CTN", name: "人造蟹钳 IMITATION CRAB CLAW", packaging: "250g x 30pkt", itemCode: "40600" },
-            { type: "PKT", name: "人造蟹钳 IMITATION CRAB CLAW", packaging: "250g/pkt", itemCode: "40601" }
+            { type: "CTN", name: "鱼片 FISH SLICE", packaging: "50's x 20box", itemCode: "10450.1" },
+            { type: "PKT", name: "鱼片 FISH SLICE", packaging: "50's", itemCode: "10450" }
         ],
         scanned: false
     },
     {
-        barcode: "50101",
-        name: "(奥)蟹柳 CRAB NUGGET",
-        packaging: "1kg/pkt",
+        barcode: "40610",
+        name: "香脆蟹钳 BREADED CRAB CLAW",
+        packaging: "300g x 20pkt",
         skus: [
-            { type: "PKT", name: "(奥)蟹柳 CRAB NUGGET", packaging: "1kg/pkt", itemCode: "50101" }
+            { type: "CTN", name: "香脆蟹钳 BREADED CRAB CLAW", packaging: "300g x 20pkt", itemCode: "40610" },
+            { type: "PKT", name: "香脆蟹钳 BREADED CRAB CLAW", packaging: "300g/pkt", itemCode: "40611" }
         ],
         scanned: false
     },
     {
-        barcode: "50111",
-        name: "(奥)鱼蛋卷 FISH CRAB ROLL",
-        packaging: "1kg/pkt",
-        skus: [
-            { type: "PKT", name: "(奥)鱼蛋卷 FISH CRAB ROLL", packaging: "1kg/pkt", itemCode: "50111" }
-        ],
-        scanned: false
-    },
-{
-        barcode: "50131",
-        name: "(奥)富贵鱼 GOLDENFISH SOLO",
-        packaging: "1kg/pkt",
-        skus: [
-            { type: "PKT", name: "(奥)富贵鱼 GOLDENFISH SOLO", packaging: "1kg/pkt", itemCode: "50131" }
-        ],
-        scanned: false
-    },
-    {
-        barcode: "50141",
-        name: "(奥)三文鱼 SALMON FISH",
-        packaging: "1kg/pkt",
-        skus: [
-            { type: "PKT", name: "(奥)三文鱼 SALMON FISH", packaging: "1kg/pkt", itemCode: "50141" }
-        ],
-        scanned: false
-    },
-    {
-        barcode: "50151",
-        name: "(奥)三文治豆腐 SANDWICH TOFU",
-        packaging: "1kg/pkt",
-        skus: [
-            { type: "PKT", name: "(奥)三文治豆腐 SANDWICH TOFU", packaging: "1kg/pkt", itemCode: "50151" }
-        ],
-        scanned: false
-    },
-    {
-        barcode: "50161",
-        name: "(奥)半圆海鲜豆腐 SEAFOOD TOFU",
-        packaging: "1kg/pkt",
-        skus: [
-            { type: "PKT", name: "(奥)半圆海鲜豆腐 SEAFOOD TOFU", packaging: "1kg/pkt", itemCode: "50161" }
-        ],
-        scanned: false
-    },
-    {
-        barcode: "10900",
-        name: "苏东丸 CUTTLEFISH BALL",
+        barcode: "40626",
+        name: "利泉香脆鱼片 LI CHUAN BREADED FISH CHIP",
         packaging: "500g x 20pkt",
         skus: [
-            { type: "CTN", name: "苏东丸 CUTTLEFISH BALL", packaging: "500g x 20pkt", itemCode: "10900" },
-            { type: "PKT", name: "苏东丸 CUTTLEFISH BALL", packaging: "500g/pkt", itemCode: "10901" }
+            { type: "CTN", name: "利泉香脆鱼片 LI CHUAN BREADED FISH CHIP", packaging: "500g x 20pkt", itemCode: "40626" },
+            { type: "PKT", name: "利泉香脆鱼片 LI CHUAN BREADED FISH CHIP", packaging: "500g/pkt", itemCode: "40627" }
         ],
         scanned: false
     },
     {
-        barcode: "24000",
-        name: "香菇丸 MUSHROOM BALL",
-        packaging: "1kg x 10pkt",
+        barcode: "60030",
+        name: "火锅鱼肉腐竹 FISH BEAN CURD (steamboat)",
+        packaging: "400g x 20pkt",
         skus: [
-            { type: "CTN", name: "香菇丸 MUSHROOM BALL", packaging: "1kg x 10pkt", itemCode: "24000" },
-            { type: "PKT", name: "香菇丸 MUSHROOM BALL", packaging: "1kg/pkt", itemCode: "24001" }
+            { type: "CTN", name: "火锅鱼肉腐竹 FISH BEAN CURD (steamboat)", packaging: "400g x 20pkt", itemCode: "60030" },
+            { type: "PKT", name: "火锅鱼肉腐竹 FISH BEAN CURD (steamboat)", packaging: "400g/pkt", itemCode: "60031" }
         ],
         scanned: false
     },
     {
-        barcode: "24020",
-        name: "香菇丸 MUSHROOM BALL (17g)",
-        packaging: "200g x 40pkt",
+        barcode: "60020",
+        name: "海鲜大腐竹 JUMBO FISH BEAN CURD",
+        packaging: "350g x 30pkt",
         skus: [
-            { type: "CTN", name: "香菇丸 MUSHROOM BALL (17g)", packaging: "200g x 40pkt", itemCode: "24020" },
-            { type: "PKT", name: "香菇丸 MUSHROOM BALL (17g)", packaging: "200g/pkt", itemCode: "24021" }
+            { type: "CTN", name: "海鲜大腐竹 JUMBO FISH BEAN CURD", packaging: "350g x 30pkt", itemCode: "60020" },
+            { type: "PKT", name: "海鲜大腐竹 JUMBO FISH BEAN CURD", packaging: "350g/pkt", itemCode: "60021" }
         ],
         scanned: false
     },
     {
-        barcode: "40670",
-        name: "海贝 IMITATION SCALLOP",
-        packaging: "250g x 40pkt",
+        barcode: "10110.1",
+        name: "1年 - 鱼饺 FISH DUMPLING 1 Year",
+        packaging: "10's x 60trays",
         skus: [
-            { type: "CTN", name: "海贝 IMITATION SCALLOP", packaging: "250g x 40pkt", itemCode: "40670" },
-            { type: "PKT", name: "海贝 IMITATION SCALLOP", packaging: "250g/pkt", itemCode: "40671" }
+            { type: "CTN", name: "1年 - 鱼饺 FISH DUMPLING 1 Year", packaging: "10's x 60trays", itemCode: "10110.1" },
+            { type: "PKT", name: "1年 - 鱼饺 FISH DUMPLING 1 Year", packaging: "10's/tray", itemCode: "10110.2" }
         ],
         scanned: false
     },
     {
-        barcode: "40650",
-        name: "虾仁卷 SHRIMP ROLL",
-        packaging: "320g x 28pkt",
+        barcode: "10410.1",
+        name: "1年 - 鱼片 FISH SLICE 1 Year",
+        packaging: "10's x 60trays",
         skus: [
-            { type: "CTN", name: "虾仁卷 SHRIMP ROLL", packaging: "320g x 28pkt", itemCode: "40650" },
-            { type: "PKT", name: "虾仁卷 SHRIMP ROLL", packaging: "320g/pkt", itemCode: "40651" }
+            { type: "CTN", name: "1年 - 鱼片 FISH SLICE 1 Year", packaging: "10's x 60trays", itemCode: "10410.1" },
+            { type: "PKT", name: "1年 - 鱼片 FISH SLICE 1 Year", packaging: "10's/tray", itemCode: "10410.2" }
         ],
         scanned: false
     },
     {
-        barcode: "28034",
-        name: "(菜) 海鲜豆腐 SEAFOOD TOFU WITH VEGETABLE",
-        packaging: "1kg x 10pkt",
+        barcode: "40641",
+        name: "生鱼片 SUTCHI FISH FILLET",
+        packaging: "6kg 3kg x 2pkt",
         skus: [
-            { type: "CTN", name: "(菜) 海鲜豆腐 SEAFOOD TOFU WITH VEGETABLE", packaging: "1kg x 10pkt", itemCode: "28034" },
-            { type: "PKT", name: "(菜) 海鲜豆腐 SEAFOOD TOFU WITH VEGETABLE", packaging: "1kg/pkt", itemCode: "28035" }
+            { type: "CTN", name: "生鱼片 SUTCHI FISH FILLET", packaging: "6kg 3kg x 2pkt", itemCode: "40641" }
+        ],
+        scanned: false
+    },
+    {
+        barcode: "85002",
+        name: "(PC)香菇丸 PC MUSHROOM BALL",
+        packaging: "10's/tray",
+        skus: [
+            { type: "PKT", name: "(PC)香菇丸 PC MUSHROOM BALL", packaging: "10's/tray", itemCode: "85002" }
+        ],
+        scanned: false
+    },
+    {
+        barcode: "RM048",
+        name: "CHICKEN B/L LEG / 鸡腿肉",
+        packaging: "2kg x 6pkt",
+        skus: [
+            { type: "CTN", name: "CHICKEN B/L LEG / 鸡腿肉", packaging: "2kg x 6pkt", itemCode: "RM048" }
+        ],
+        scanned: false
+    },
+    {
+        barcode: "RM051",
+        name: "Squid / 墨鱼",
+        packaging: "20kg",
+        skus: [
+            { type: "CTN", name: "Squid / 墨鱼", packaging: "20kg", itemCode: "RM051" }
+        ],
+        scanned: false
+    },
+    {
+        barcode: "SU15",
+        name: "黄尾鱼 YELLOW TAIL FISH",
+        packaging: "20kg",
+        skus: [
+            { type: "CTN", name: "黄尾鱼 YELLOW TAIL FISH", packaging: "20kg", itemCode: "SU15" }
         ],
         scanned: false
     }
