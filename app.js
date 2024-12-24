@@ -474,21 +474,18 @@ function showQuantityModal(product) {
         boxQuantityLabel.style.display = 'block';
         pieceQuantityInput.style.display = 'none';
         pieceQuantityLabel.style.display = 'none';
-        boxQuantityInput.focus();
     } else if (!hasCTN && hasPKT) {
         // Only show PKT input
         boxQuantityInput.style.display = 'none';
         boxQuantityLabel.style.display = 'none';
         pieceQuantityInput.style.display = 'block';
         pieceQuantityLabel.style.display = 'block';
-        pieceQuantityInput.focus();
     } else if (hasCTN && hasPKT) {
         // Show both inputs
         boxQuantityInput.style.display = 'block';
         boxQuantityLabel.style.display = 'block';
         pieceQuantityInput.style.display = 'block';
         pieceQuantityLabel.style.display = 'block';
-        boxQuantityInput.focus();
     }
     
     // Clear inputs
@@ -497,6 +494,17 @@ function showQuantityModal(product) {
     
     // Show modal
     document.getElementById('quantityModal').style.display = 'block';
+    
+    // Set focus after a short delay to ensure the modal is fully displayed
+    setTimeout(() => {
+        if (hasCTN && !hasPKT) {
+            boxQuantityInput.focus();
+        } else if (!hasCTN && hasPKT) {
+            pieceQuantityInput.focus();
+        } else if (hasCTN && hasPKT) {
+            boxQuantityInput.focus();
+        }
+    }, 100); // Small delay to ensure modal is rendered
 }
 
 function closeModal() {
