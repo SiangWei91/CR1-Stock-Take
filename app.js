@@ -458,37 +458,51 @@ function showQuantityModal(product) {
     document.getElementById('modalProductName').textContent = product.name;
     document.getElementById('modalPackaging').textContent = product.packaging;
     
-    // Check if product has box quantity
-    const hasBoxQuantity = product.skus.some(sku => sku.type === "CTN");
+    // Check product SKU types
+    const hasCTN = product.skus.some(sku => sku.type === "CTN");
+    const hasPKT = product.skus.some(sku => sku.type === "PKT");
     
     const boxQuantityInput = document.getElementById('boxQuantityInput');
     const boxQuantityLabel = boxQuantityInput.previousElementSibling;
+    const pieceQuantityInput = document.getElementById('pieceQuantityInput');
+    const pieceQuantityLabel = pieceQuantityInput.previousElementSibling;
     
-    if (!hasBoxQuantity) {
-        boxQuantityInput.style.display = 'none';
-        boxQuantityLabel.style.display = 'none';
-    } else {
+    // Show/hide inputs based on SKU types
+    if (hasCTN && !hasPKT) {
+        // Only show CTN input
         boxQuantityInput.style.display = 'block';
         boxQuantityLabel.style.display = 'block';
+        pieceQuantityInput.style.display = 'none';
+        pieceQuantityLabel.style.display = 'none';
+        boxQuantityInput.focus();
+    } else if (!hasCTN && hasPKT) {
+        // Only show PKT input
+        boxQuantityInput.style.display = 'none';
+        boxQuantityLabel.style.display = 'none';
+        pieceQuantityInput.style.display = 'block';
+        pieceQuantityLabel.style.display = 'block';
+        pieceQuantityInput.focus();
+    } else if (hasCTN && hasPKT) {
+        // Show both inputs
+        boxQuantityInput.style.display = 'block';
+        boxQuantityLabel.style.display = 'block';
+        pieceQuantityInput.style.display = 'block';
+        pieceQuantityLabel.style.display = 'block';
+        boxQuantityInput.focus();
     }
     
-    document.getElementById('boxQuantityInput').value = '';
-    document.getElementById('pieceQuantityInput').value = '';
+    // Clear inputs
+    boxQuantityInput.value = '';
+    pieceQuantityInput.value = '';
+    
+    // Show modal
     document.getElementById('quantityModal').style.display = 'block';
-    
-    // Focus on appropriate input based on product type
-    if (hasBoxQuantity) {
-        document.getElementById('boxQuantityInput').focus();
-    } else {
-        document.getElementById('pieceQuantityInput').focus();
-    }
 }
-// 关闭模态框
+
 function closeModal() {
     document.getElementById('quantityModal').style.display = 'none';
     document.getElementById('barcodeInput').focus();
 }
-
 
 
 // 检查两个时间戳是否在同一分钟内
