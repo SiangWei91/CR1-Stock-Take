@@ -533,13 +533,7 @@ function formatDateToDDMMYYYY(dateString) {
     // First, split the dateString into date and time parts
     const [datePart, timePart] = dateString.split(' ');
     
-    // Check if the date is already in DD/MM/YYYY format
-    if (datePart.includes('/')) {
-        // If it's already in the correct format, just return the original string
-        return dateString;
-    }
-    
-    // Otherwise, parse the date
+    // Parse the date string
     const date = new Date(dateString);
     
     // Check if date is valid
@@ -561,6 +555,20 @@ function formatDateToDDMMYYYY(dateString) {
     return `${day}/${month}/${year} ${time}`;
 }
 
+// Convert date format for Google Sheets submission
+function convertDateFormat(dateStr) {
+    // Split the date string by '/'
+    const parts = dateStr.split('/');
+    
+    // Ensure we have three parts
+    if (parts.length !== 3) {
+        return dateStr; // Return original if not in expected format
+    }
+    
+    // Return in DD/MM/YYYY format
+    // parts[0] is day, parts[1] is month, parts[2] is year
+    return `${parts[0]}/${parts[1]}/${parts[2]}`;
+}
 
 // Updated renderRecords function
 function renderRecords() {
@@ -875,23 +883,29 @@ function submitQuantity() {
 
     currentProduct.scanned = true;
 
-    // Create timestamp in 24-hour format
+    // Create timestamp with correct format
     const now = new Date();
-    const date = now.toLocaleDateString(); // e.g., "11/11/2024"
+    const day = now.getDate().toString().padStart(2, '0');
+    const month = (now.getMonth() + 1).toString().padStart(2, '0');
+    const year = now.getFullYear();
     const time = now.toLocaleTimeString('en-GB', { 
         hour12: false,
         hour: '2-digit',
         minute: '2-digit',
         second: '2-digit'
     });
+    
+    const formattedDate = `${day}/${month}/${year}`;
+    const timestamp = `${formattedDate} ${time}`;
+
     const record = {
-        timestamp: `${date} ${time}`,
+        timestamp: timestamp,
         items: [{
             name: currentProduct.name,
             packaging: currentProduct.packaging,
             boxQuantity: boxQuantity,
             pieceQuantity: pieceQuantity,
-            timestamp: `${date} ${time}`
+            timestamp: timestamp
         }]
     };
 
