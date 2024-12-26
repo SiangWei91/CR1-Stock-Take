@@ -723,9 +723,28 @@ document.getElementById('pieceQuantityInput').addEventListener('keypress', funct
     }
 });
 
+function checkInternetConnection() {
+    return navigator.onLine;
+}
+
+// Function to save data to session storage
+function saveToSessionStorage(data) {
+    const existingData = JSON.parse(sessionStorage.getItem('pendingSubmissions') || '[]');
+    existingData.push(data);
+    sessionStorage.setItem('pendingSubmissions', JSON.stringify(existingData));
+}
+
+// Function to get and clear pending submissions
+function getPendingSubmissions() {
+    const pending = sessionStorage.getItem('pendingSubmissions');
+    sessionStorage.removeItem('pendingSubmissions');
+    return pending ? JSON.parse(pending) : [];
+}
+
+// Modified submit function with offline support
 async function submitToGoogleSheet() {
     const counter = document.getElementById('counterSelect').value;
-    const LOCATION = 'CR1';  // Hardcoded location for this page
+    const LOCATION = 'CR1';
     
     if (!counter) {
         showCustomAlert('请选择盘点人员！');
@@ -758,7 +777,7 @@ async function submitToGoogleSheet() {
                 const [date, time] = item.timestamp.split(' ');
                 
                 return {
-                    sheetName: LOCATION,  // Add the hardcoded location
+                    sheetName: LOCATION,
                     date: convertDateFormat(date),
                     time: time,
                     name: item.name,
@@ -772,6 +791,28 @@ async function submitToGoogleSheet() {
             })
         );
 
+        // Check internet connection
+        if (!checkInternetConnection()) {
+            saveToSessionStorage(data);
+            showCustomAlert('无网络连接。数据已保存，将在有网络时自动提交。');
+            return;
+        }
+
+        // Try to submit any pending data first
+        const pendingSubmissions = getPendingSubmissions();
+        if (pendingSubmissions.length > 0) {
+            for (const pendingData of pendingSubmissions) {
+                const response = await fetch('https://script.google.com/macros/s/AKfycbyJckzalJVidtiiih_aBZc_Ec-KW92eJgke5xRgIGte7hMUzvVKx4MhzSXwxzvS-28/exec', {
+                    method: 'POST',
+                    body: JSON.stringify(pendingData)
+                });
+                if (!response.ok) {
+                    throw new Error('提交历史数据失败');
+                }
+            }
+        }
+
+        // Submit current data
         const response = await fetch('https://script.google.com/macros/s/AKfycbyJckzalJVidtiiih_aBZc_Ec-KW92eJgke5xRgIGte7hMUzvVKx4MhzSXwxzvS-28/exec', {
             method: 'POST',
             body: JSON.stringify(data)
@@ -786,11 +827,25 @@ async function submitToGoogleSheet() {
         }
     } catch (error) {
         console.error('Error:', error);
-        showCustomAlert('提交失败，请重试！');
+        saveToSessionStorage(data);
+        showCustomAlert('提交失败，数据已保存，将在下次提交时重试！');
     } finally {
         loadingOverlay.style.display = 'none';
     }
 }
+
+// Add event listeners for online/offline status
+window.addEventListener('online', async () => {
+    const pendingSubmissions = getPendingSubmissions();
+    if (pendingSubmissions.length > 0) {
+        showCustomAlert('检测到网络连接，正在提交保存的数据...');
+        await submitToGoogleSheet();
+    }
+});
+
+window.addEventListener('offline', () => {
+    showCustomAlert('网络连接已断开。数据将保存在本地。');
+});
 // Also update where you create the record to store date and time separately
 function submitQuantity() {
     const boxQuantity = parseInt(document.getElementById('boxQuantityInput').value) || 0;
