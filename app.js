@@ -727,17 +727,17 @@ function checkInternetConnection() {
     return navigator.onLine;
 }
 
-// Function to save data to session storage
-function saveToSessionStorage(data) {
-    const existingData = JSON.parse(sessionStorage.getItem('pendingSubmissions') || '[]');
+// Function to save data to local storage
+function saveToLocalStorage(data) {
+    const existingData = JSON.parse(localStorage.getItem('pendingSubmissions') || '[]');
     existingData.push(data);
-    sessionStorage.setItem('pendingSubmissions', JSON.stringify(existingData));
+    localStorage.setItem('pendingSubmissions', JSON.stringify(existingData));
 }
 
 // Function to get and clear pending submissions
 function getPendingSubmissions() {
-    const pending = sessionStorage.getItem('pendingSubmissions');
-    sessionStorage.removeItem('pendingSubmissions');
+    const pending = localStorage.getItem('pendingSubmissions');
+    localStorage.removeItem('pendingSubmissions');
     return pending ? JSON.parse(pending) : [];
 }
 
@@ -793,7 +793,7 @@ async function submitToGoogleSheet() {
 
         // Check internet connection
         if (!checkInternetConnection()) {
-            saveToSessionStorage(data);
+            saveToLocalStorage(data);
             showCustomAlert('无网络连接。数据已保存，将在有网络时自动提交。');
             return;
         }
@@ -827,7 +827,7 @@ async function submitToGoogleSheet() {
         }
     } catch (error) {
         console.error('Error:', error);
-        saveToSessionStorage(data);
+        saveToLocalStorage(data);
         showCustomAlert('提交失败，数据已保存，将在下次提交时重试！');
     } finally {
         loadingOverlay.style.display = 'none';
