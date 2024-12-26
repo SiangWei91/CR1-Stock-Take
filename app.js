@@ -533,7 +533,12 @@ function formatDateToDDMMYYYY(dateString) {
     // First, split the dateString into date and time parts
     const [datePart, timePart] = dateString.split(' ');
     
-    // Parse the date string
+    // If the date is already in DD/MM/YYYY format, return as is
+    if (datePart.match(/^\d{2}\/\d{2}\/\d{4}$/)) {
+        return dateString;
+    }
+    
+    // Otherwise, parse the date and convert
     const date = new Date(dateString);
     
     // Check if date is valid
@@ -545,7 +550,7 @@ function formatDateToDDMMYYYY(dateString) {
     const day = date.getDate().toString().padStart(2, '0');
     const month = (date.getMonth() + 1).toString().padStart(2, '0');
     const year = date.getFullYear();
-    const time = date.toLocaleTimeString('en-GB', { 
+    const time = timePart || date.toLocaleTimeString('en-GB', { 
         hour12: false,
         hour: '2-digit',
         minute: '2-digit',
@@ -557,17 +562,8 @@ function formatDateToDDMMYYYY(dateString) {
 
 // Convert date format for Google Sheets submission
 function convertDateFormat(dateStr) {
-    // Split the date string by '/'
-    const parts = dateStr.split('/');
-    
-    // Ensure we have three parts
-    if (parts.length !== 3) {
-        return dateStr; // Return original if not in expected format
-    }
-    
-    // Return in DD/MM/YYYY format
-    // parts[0] is day, parts[1] is month, parts[2] is year
-    return `${parts[0]}/${parts[1]}/${parts[2]}`;
+    // Already in DD/MM/YYYY format, return as is
+    return dateStr;
 }
 
 // Updated renderRecords function
