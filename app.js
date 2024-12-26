@@ -781,12 +781,15 @@ async function submitToGoogleSheet() {
     loadingOverlay.style.display = 'block';
 
     try {
-        function convertDateFormat(dateStr) {
-            const parts = dateStr.split('/');
-            if (parts.length === 3) {
-                return `${parts[1]}/${parts[0]}/${parts[2]}`;
-            }
-            return dateStr;
+        function formatDateForGoogleSheets(dateStr) {
+            // Extract date part (before the space)
+            const [datePart, timePart] = dateStr.split(' ');
+            
+            // Split the date into components
+            const [day, month, year] = datePart.split('/');
+            
+            // Format as DD/MM/YYYY explicitly
+            return `${day}/${month}/${year}`;
         }
 
         const data = scanRecords.flatMap(record => 
@@ -799,7 +802,7 @@ async function submitToGoogleSheet() {
                 
                 return {
                     sheetName: LOCATION,
-                    date: convertDateFormat(date),
+                     date: formatDateForGoogleSheets(item.timestamp),  // Use new format function
                     time: time,
                     name: item.name,
                     packaging: item.packaging,
