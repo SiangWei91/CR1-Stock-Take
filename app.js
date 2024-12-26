@@ -868,13 +868,13 @@ function submitQuantity() {
         second: '2-digit'
     });
     const record = {
-        timestamp: ${date} ${time},
+        timestamp: `${date} ${time}`,
         items: [{
             name: currentProduct.name,
             packaging: currentProduct.packaging,
             boxQuantity: boxQuantity,
             pieceQuantity: pieceQuantity,
-            timestamp: ${date} ${time}
+            timestamp: `${date} ${time}`
         }]
     };
 
