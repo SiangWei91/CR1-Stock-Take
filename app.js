@@ -846,7 +846,7 @@ window.addEventListener('online', async () => {
 window.addEventListener('offline', () => {
     showCustomAlert('网络连接已断开。数据将保存在本地。');
 });
-
+// Also update where you create the record to store date and time separately
 function submitQuantity() {
     const boxQuantity = parseInt(document.getElementById('boxQuantityInput').value) || 0;
     const pieceQuantity = parseInt(document.getElementById('pieceQuantityInput').value) || 0;
