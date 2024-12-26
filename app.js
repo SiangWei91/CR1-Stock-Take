@@ -727,32 +727,17 @@ function checkInternetConnection() {
     return navigator.onLine;
 }
 
-// Function to save scanned records to local storage
-function saveScannedRecordsToStorage() {
-    localStorage.setItem('scannedRecords', JSON.stringify(scanRecords));
-}
-
-// Function to load scanned records from local storage
-function loadScannedRecordsFromStorage() {
-    const savedRecords = localStorage.getItem('scannedRecords');
-    if (savedRecords) {
-        scanRecords = JSON.parse(savedRecords);
-        renderRecords();
-        updateProgress();
-    }
-}
-
-// Function to save data to local storage
-function saveToLocalStorage(data) {
-    const existingData = JSON.parse(localStorage.getItem('pendingSubmissions') || '[]');
+// Function to save data to session storage
+function saveToSessionStorage(data) {
+    const existingData = JSON.parse(sessionStorage.getItem('pendingSubmissions') || '[]');
     existingData.push(data);
-    localStorage.setItem('pendingSubmissions', JSON.stringify(existingData));
+    sessionStorage.setItem('pendingSubmissions', JSON.stringify(existingData));
 }
 
 // Function to get and clear pending submissions
 function getPendingSubmissions() {
-    const pending = localStorage.getItem('pendingSubmissions');
-    localStorage.removeItem('pendingSubmissions');
+    const pending = sessionStorage.getItem('pendingSubmissions');
+    sessionStorage.removeItem('pendingSubmissions');
     return pending ? JSON.parse(pending) : [];
 }
 
@@ -808,8 +793,7 @@ async function submitToGoogleSheet() {
 
         // Check internet connection
         if (!checkInternetConnection()) {
-            saveToLocalStorage(data);
-            saveScannedRecordsToStorage(); // Save current records before showing alert
+            saveToSessionStorage(data);
             showCustomAlert('无网络连接。数据已保存，将在有网络时自动提交。');
             return;
         }
@@ -837,59 +821,17 @@ async function submitToGoogleSheet() {
         if (response.ok) {
             showCustomAlert('数据提交成功！');
             scanRecords = [];
-            localStorage.removeItem('scannedRecords'); // Clear stored records after successful submission
             renderRecords();
         } else {
             throw new Error('提交失败');
         }
     } catch (error) {
         console.error('Error:', error);
-        saveToLocalStorage(data);
-        saveScannedRecordsToStorage(); // Save current records in case of error
+        saveToSessionStorage(data);
         showCustomAlert('提交失败，数据已保存，将在下次提交时重试！');
     } finally {
         loadingOverlay.style.display = 'none';
     }
-}
-
-// Modified submitQuantity function to save records after each scan
-function submitQuantity() {
-    const boxQuantity = parseInt(document.getElementById('boxQuantityInput').value) || 0;
-    const pieceQuantity = parseInt(document.getElementById('pieceQuantityInput').value) || 0;
-    
-    if (boxQuantity === 0 && pieceQuantity === 0) {
-        showCustomAlert('请至少输入一个数量！');
-        return;
-    }
-    
-    currentProduct.scanned = true;
-    
-    const now = new Date();
-    const date = now.toLocaleDateString();
-    const time = now.toLocaleTimeString('en-GB', { 
-        hour12: false,
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit'
-    });
-
-    const record = {
-        timestamp: `${date} ${time}`,
-        items: [{
-            name: currentProduct.name,
-            packaging: currentProduct.packaging,
-            boxQuantity: boxQuantity,
-            pieceQuantity: pieceQuantity,
-            timestamp: `${date} ${time}`
-        }]
-    };
-    
-    scanRecords.unshift(record);
-    saveScannedRecordsToStorage(); // Save after each new scan
-    renderRecords();
-    renderProducts();
-    updateProgress();
-    closeModal();
 }
 
 // Add event listeners for online/offline status
@@ -903,25 +845,19 @@ window.addEventListener('online', async () => {
 
 window.addEventListener('offline', () => {
     showCustomAlert('网络连接已断开。数据将保存在本地。');
-    saveScannedRecordsToStorage(); // Save current records when going offline
 });
 
-// Add this to your initialization code (when the page loads)
-document.addEventListener('DOMContentLoaded', () => {
-    loadScannedRecordsFromStorage();
-});
-// Also update where you create the record to store date and time separately
 function submitQuantity() {
     const boxQuantity = parseInt(document.getElementById('boxQuantityInput').value) || 0;
     const pieceQuantity = parseInt(document.getElementById('pieceQuantityInput').value) || 0;
-    
+
     if (boxQuantity === 0 && pieceQuantity === 0) {
         showCustomAlert('请至少输入一个数量！');
         return;
     }
-    
+
     currentProduct.scanned = true;
-    
+
     // Create timestamp in 24-hour format
     const now = new Date();
     const date = now.toLocaleDateString(); // e.g., "11/11/2024"
@@ -931,18 +867,17 @@ function submitQuantity() {
         minute: '2-digit',
         second: '2-digit'
     });
-
     const record = {
-        timestamp: `${date} ${time}`,
+        timestamp: ${date} ${time},
         items: [{
             name: currentProduct.name,
             packaging: currentProduct.packaging,
             boxQuantity: boxQuantity,
             pieceQuantity: pieceQuantity,
-            timestamp: `${date} ${time}`
+            timestamp: ${date} ${time}
         }]
     };
-    
+
     scanRecords.unshift(record);
     renderRecords();
     renderProducts();
@@ -954,7 +889,6 @@ if ('serviceWorker' in navigator) {
     reg.update();
   });
 }
-
 function checkForUpdates() {
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.getRegistration().then(reg => {
