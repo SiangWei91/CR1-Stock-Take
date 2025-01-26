@@ -214,6 +214,24 @@ const products = [
         scanned: false
     },
     {
+        barcode: "26021",
+        name: "螃蟹丸 FLAVOURED CRAB BALL",
+        packaging: "10's/tray",
+        skus: [
+            { type: "PKT", name: "螃蟹丸 FLAVOURED CRAB BALL", packaging: "10's/tray", itemCode: "26021" }
+        ],
+        scanned: false
+    },
+    {
+        barcode: "25030",
+        name: "海鲜条 SEAFOOD STICK",
+        packaging: "10's/tray",
+        skus: [
+            { type: "PKT", name: "海鲜条 SEAFOOD STICK", packaging: "10's/tray", itemCode: "25030" }
+        ],
+        scanned: false
+    },
+    {
         barcode: "85002",
         name: "(PC)香菇丸 PC MUSHROOM BALL",
         packaging: "10's/tray",
