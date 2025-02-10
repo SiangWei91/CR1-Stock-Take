@@ -159,10 +159,10 @@ const products = [
     {
         barcode: "60020",
         name: "海鲜大腐竹 JUMBO FISH BEAN CURD",
-        packaging: "350g x 30pkt",
+        packaging: "10's x 30pkt",
         skus: [
-            { type: "CTN", name: "海鲜大腐竹 JUMBO FISH BEAN CURD", packaging: "350g x 30pkt", itemCode: "60020" },
-            { type: "PKT", name: "海鲜大腐竹 JUMBO FISH BEAN CURD", packaging: "350g/pkt", itemCode: "60021" }
+            { type: "CTN", name: "海鲜大腐竹 JUMBO FISH BEAN CURD", packaging: "10's x 30pkt", itemCode: "60020" },
+            { type: "PKT", name: "海鲜大腐竹 JUMBO FISH BEAN CURD", packaging: "10's/pkt", itemCode: "60021" }
         ],
         scanned: false
     },
