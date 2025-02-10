@@ -97,15 +97,6 @@ const products = [
         scanned: false
     },
     {
-        barcode: "10802",
-        name: "鱼肉 FISH PASTE 200g",
-        packaging: "200g/box",
-        skus: [
-            { type: "PKT", name: "鱼肉 FISH PASTE", packaging: "200g/box", itemCode: "10802" }
-        ],
-        scanned: false
-    },
-    {
         barcode: "10250.1",
         name: "菜卷 50粒 FISH VEGETABLE ROLL 50's",
         packaging: "50's x 20box",
