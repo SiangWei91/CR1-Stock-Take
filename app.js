@@ -106,15 +106,6 @@ const products = [
         scanned: false
     },
     {
-        barcode: "24030",
-        name: "香菇丸 10粒 MUSHROOM BALL 10's",
-        packaging: "10's/tray",
-        skus: [
-            { type: "PKT", name: "香菇丸 MUSHROOM BALL (13g)", packaging: "10's/tray", itemCode: "24030" }
-        ],
-        scanned: false
-    },
-    {
         barcode: "10250.1",
         name: "菜卷 50粒 FISH VEGETABLE ROLL 50's",
         packaging: "50's x 20box",
@@ -245,16 +236,17 @@ const products = [
         name: "CHICKEN B/L LEG / 鸡腿肉",
         packaging: "2kg x 6pkt",
         skus: [
-            { type: "CTN", name: "CHICKEN B/L LEG / 鸡腿肉", packaging: "2kg x 6pkt", itemCode: "RM048" }
+            { type: "CTN", name: "CHICKEN B/L LEG / 鸡腿肉", packaging: "2kg x 6pkt", itemCode: "RM048" },
+{ type: "PKT", name: "CHICKEN B/L LEG / 鸡腿肉", packaging: "2kg", itemCode: "RM048.1" }
         ],
         scanned: false
     },
     {
         barcode: "RM051",
-        name: "Squid / 墨鱼",
+        name: "Squid / 苏东",
         packaging: "20kg",
         skus: [
-            { type: "CTN", name: "Squid / 墨鱼", packaging: "20kg", itemCode: "RM051" }
+            { type: "CTN", name: "Squid / 苏东", packaging: "20kg", itemCode: "RM051" }
         ],
         scanned: false
     },
