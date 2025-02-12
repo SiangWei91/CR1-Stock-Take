@@ -177,16 +177,6 @@ const products = [
         scanned: false
     },
     {
-        barcode: "10410.1",
-        name: "1年 - 鱼片 FISH SLICE 1 Year",
-        packaging: "10's x 60trays",
-        skus: [
-            { type: "CTN", name: "1年 - 鱼片 FISH SLICE 1 Year", packaging: "10's x 60trays", itemCode: "10410.1" },
-            { type: "PKT", name: "1年 - 鱼片 FISH SLICE 1 Year", packaging: "10's/tray", itemCode: "10410.2" }
-        ],
-        scanned: false
-    },
-    {
         barcode: "40641",
         name: "生鱼片 SUTCHI FISH FILLET",
         packaging: "6kg 3kg x 2pkt",
