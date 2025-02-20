@@ -227,7 +227,7 @@ const products = [
         name: "Squid / 苏东",
         packaging: "20kg",
         skus: [
-            { type: "CTN", name: "Squid / 苏东", packaging: "20kg", itemCode: "RM051" }
+            { type: "CTN", name: "Squid / 苏东", packaging: "20kg", itemCode: "RM049" }
         ],
         scanned: false
     },
