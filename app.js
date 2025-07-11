@@ -246,12 +246,19 @@ let scanRecords = [];
 
 
 // 初始化
+// Consolidated window.onload
 window.onload = function() {
     renderProducts();
     updateProgress();
-    document.getElementById('barcodeInput').focus();
-    populateUserDropdown(); // Add this line to populate the dropdown
-}
+    // setupBarcodeInput will handle focusing on barcodeInput
+    setupBarcodeInput(); 
+    // populateUserDropdown is called by DOMContentLoaded, but calling again here ensures it runs if DOMContentLoaded already fired.
+    // However, it's generally better to ensure it's called once. DOMContentLoaded is usually sufficient.
+    // For safety, and given its async nature and internal checks, calling it here might be okay,
+    // but ideally, structure ensures single appropriate call.
+    // Let's rely on DOMContentLoaded for populateUserDropdown and remove it from here if it's redundant.
+    // populateUserDropdown(); // This is called by DOMContentLoaded, likely redundant here.
+};
 
 function createCustomAlert() {
     // Create the styles
@@ -402,11 +409,12 @@ function searchProduct() {
     document.getElementById('barcodeInput').value = '';
 }
 // Initialize
-window.onload = function() {
-    renderProducts();
-    updateProgress();
-    setupBarcodeInput();
-}
+// window.onload is now consolidated. This specific one is removed.
+// window.onload = function() {
+//     renderProducts();
+//     updateProgress();
+//     setupBarcodeInput();
+// }
 
 // New function to setup barcode input with auto-trigger
 function setupBarcodeInput() {
@@ -951,31 +959,71 @@ async function fetchUsersFromFirebase() {
 // Populate dropdown with users
 async function populateUserDropdown() {
   const counterSelect = document.getElementById("counterSelect");
-
-  // Check cache first
-  const cachedData = getUsersFromCache();
-  if (cachedData) {
-    populateDropdownWithData(cachedData);
+  if (!counterSelect) {
+    console.error("Counter select dropdown not found during populateUserDropdown.");
     return;
   }
 
-  // Clear existing options except placeholder
-  counterSelect.innerHTML = counterSelect.options[0].outerHTML;
+  const cacheResult = getUsersFromCache();
+  let currentUsers = cacheResult.users;
 
-  // Fetch users from Firebase
-  const users = await fetchUsersFromFirebase();
-  if (users.length === 0) return;
+  if (cacheResult.exists && currentUsers && currentUsers.length > 0) {
+    console.log("Populating dropdown from cache (might be stale).");
+    populateDropdownWithData(currentUsers);
+  } else {
+    // Ensure dropdown is at least reset to placeholder if no cache
+    populateDropdownWithData(null); 
+  }
 
-  users.forEach(user => {
-    const option = document.createElement("option");
-    option.value = user.name;
-    option.textContent = user.name;
-    option.dataset.id = user.id;
-    counterSelect.appendChild(option);
-  });
-
-  // Cache results for 12 hours
-  cacheUsers(users);
+  if (cacheResult.isStale || !cacheResult.exists) {
+    if (navigator.onLine) {
+      console.log(cacheResult.exists ? "Cache is stale, fetching fresh data." : "No cache, fetching data.");
+      try {
+        const fetchedUsers = await fetchUsersFromFirebase();
+        if (fetchedUsers && fetchedUsers.length > 0) {
+          console.log("Successfully fetched new user data.");
+          populateDropdownWithData(fetchedUsers);
+          cacheUsers(fetchedUsers); // Update cache with fresh data
+          // If stale cache was being used, this will overwrite it with fresh data and new timestamp.
+          // If cache was non-existent, this creates it.
+        } else if (!cacheResult.exists || (cacheResult.exists && (!currentUsers || currentUsers.length === 0))) {
+          // Fetch returned no users AND there was no usable cache (neither fresh nor stale)
+          console.log("Fetch returned no users and no usable cache existed.");
+          showCustomAlert("Operator list could not be loaded from the server.");
+          // Dropdown would have already been cleared or set to placeholder by populateDropdownWithData(null)
+        } else {
+          // Fetch returned no users, but we might be showing stale data, which is fine.
+          console.log("Fetch returned no new users, continuing with stale data if available.");
+        }
+      } catch (error) {
+        console.error("Error fetching users from Firebase:", error);
+        if (!currentUsers || currentUsers.length === 0) {
+          // Only show alert if we don't even have stale data to show
+          showCustomAlert("Failed to fetch operator list. Check your internet connection.");
+        }
+      }
+    } else { // Offline
+      if (!cacheResult.exists && (!currentUsers || currentUsers.length === 0)) {
+        // Offline and no cache at all (not even stale)
+        console.log("Offline and no user cache available.");
+        showCustomAlert("You are offline. Operator list cannot be loaded without a connection or local cache.");
+      } else if (cacheResult.exists && (!currentUsers || currentUsers.length === 0)) {
+        // This case should ideally not happen if exists = true means users is not null/empty
+        // but as a fallback.
+        console.log("Offline, cache existed but was empty. This state should be rare.");
+        showCustomAlert("You are offline. Operator list seems empty in local cache.");
+      } else {
+        // Offline but using cached data (fresh or stale)
+        console.log("Offline, using cached user data.");
+        if(cacheResult.isStale){
+            showCustomAlert("You are offline. Displaying potentially outdated operator list from cache.");
+        }
+      }
+    }
+  } else {
+    // Cache exists and is not stale. Already populated.
+    console.log("Using fresh user data from cache.");
+  }
 }
 
 // Cache users data for 12 hours
@@ -986,24 +1034,163 @@ function cacheUsers(users) {
 // Get users from cache if valid (12 hours = 43200000 ms)
 function getUsersFromCache() {
   const cachedData = localStorage.getItem("userCache");
-  if (!cachedData) return null;
+  if (!cachedData) return { users: null, isStale: false, exists: false };
 
-  const { timestamp, users } = JSON.parse(cachedData);
-  return Date.now() - timestamp < 43200000 ? users : (localStorage.removeItem("userCache"), null);
+  try {
+    const { timestamp, users } = JSON.parse(cachedData);
+    if (!users || !timestamp) { // Basic validation of cache structure
+        localStorage.removeItem("userCache");
+        return { users: null, isStale: false, exists: false };
+    }
+    const isStale = (Date.now() - timestamp) >= 43200000;
+    return { users, isStale, exists: true };
+  } catch (error) {
+    console.error("Error parsing user cache:", error);
+    localStorage.removeItem("userCache"); // Remove corrupted cache
+    return { users: null, isStale: false, exists: false };
+  }
 }
 
 // Populate dropdown with cached data
 function populateDropdownWithData(users) {
   const counterSelect = document.getElementById("counterSelect");
-  counterSelect.innerHTML = counterSelect.options[0].outerHTML;
+  // Ensure counterSelect exists
+  if (!counterSelect) {
+      console.error("counterSelect element not found");
+      return;
+  }
+  // Preserve the first (placeholder) option if it exists
+  const placeholderOption = counterSelect.options[0] ? counterSelect.options[0].outerHTML : '<option value="">盘点人员 | Operator</option>';
+  counterSelect.innerHTML = placeholderOption;
 
-  users.forEach(user => {
-    const option = document.createElement("option");
-    option.value = user.name;
-    option.textContent = user.name;
-    option.dataset.id = user.id;
-    counterSelect.appendChild(option);
-  });
+  if (users && users.length > 0) {
+    users.forEach(user => {
+      const option = document.createElement("option");
+      option.value = user.name;
+      option.textContent = user.name;
+      option.dataset.id = user.id; // Assuming user objects have an id
+      counterSelect.appendChild(option);
+    });
+  }
 }
 
-document.addEventListener("DOMContentLoaded", populateUserDropdown);
+document.addEventListener("DOMContentLoaded", function() {
+    populateUserDropdown();
+    initializeSidePanel();
+});
+
+// Side Panel Logic
+let touchstartX = 0;
+let touchendX = 0;
+let touchstartY = 0; // To help distinguish scroll from swipe
+let touchendY = 0; // To help distinguish scroll from swipe
+const swipeThreshold = 50; // Minimum distance for a swipe
+const swipeEdgeArea = 50; // How close to the edge swipe must start
+
+function openSidePanel() {
+    const sidePanel = document.getElementById('sidePanel');
+    const overlay = document.getElementById('overlay');
+    if (sidePanel && overlay) {
+        sidePanel.classList.add('open');
+        overlay.classList.add('active');
+    }
+}
+
+function closeSidePanel() {
+    const sidePanel = document.getElementById('sidePanel');
+    const overlay = document.getElementById('overlay');
+    if (sidePanel && overlay) {
+        sidePanel.classList.remove('open');
+        overlay.classList.remove('active');
+    }
+}
+
+function handleSwipeGesture() {
+    const deltaX = touchendX - touchstartX;
+    const deltaY = touchendY - touchstartY;
+
+    // Check if it's primarily a horizontal swipe and not a vertical scroll
+    if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > swipeThreshold) {
+        const sidePanel = document.getElementById('sidePanel');
+        if (!sidePanel) return;
+
+        if (deltaX > 0 && touchstartX < swipeEdgeArea && !sidePanel.classList.contains('open')) {
+            // Swipe Right from left edge to open
+            openSidePanel();
+        } else if (deltaX < 0 && sidePanel.classList.contains('open')) {
+            // Swipe Left to close (optional: can also rely on overlay click or close button)
+            // For now, let's make it simple: any significant swipe left when open closes it.
+            // More precise would be to check if swipe started inside panel or if touchendX is far left.
+            // closeSidePanel(); // Let's use button/overlay for closing first to keep swipe open simple.
+        }
+    }
+}
+
+function initializeSidePanel() {
+    const overlay = document.getElementById('overlay');
+    const closeButton = document.getElementById('closePanelBtn');
+
+    if (overlay) {
+        overlay.addEventListener('click', closeSidePanel);
+    }
+    if (closeButton) {
+        closeButton.addEventListener('click', closeSidePanel);
+    }
+
+    document.addEventListener('touchstart', function(event) {
+        touchstartX = event.changedTouches[0].screenX;
+        touchstartY = event.changedTouches[0].screenY;
+    }, { passive: true }); // Passive for performance, if not calling preventDefault
+
+    document.addEventListener('touchend', function(event) {
+        touchendX = event.changedTouches[0].screenX;
+        touchendY = event.changedTouches[0].screenY;
+        handleSwipeGesture();
+    }, { passive: true });
+
+    const refreshOperatorsButton = document.getElementById('refreshOperatorsBtn');
+    if (refreshOperatorsButton) {
+        refreshOperatorsButton.addEventListener('click', forceRefreshOperatorList);
+    }
+}
+
+async function forceRefreshOperatorList() {
+    const refreshButton = document.getElementById('refreshOperatorsBtn');
+    const originalButtonText = refreshButton ? refreshButton.textContent : "Refresh Operator List";
+
+    if (!navigator.onLine) {
+        showCustomAlert("Cannot refresh: You are offline.");
+        return;
+    }
+
+    if (refreshButton) refreshButton.textContent = "Refreshing...";
+    // Optional: Disable button refreshButton.disabled = true;
+
+    try {
+        const users = await fetchUsersFromFirebase();
+        if (users && users.length > 0) {
+            populateDropdownWithData(users);
+            cacheUsers(users);
+            showCustomAlert("Operator list updated successfully!");
+        } else if (users && users.length === 0) {
+            // Firebase returned an empty list
+            populateDropdownWithData([]); // Clear the dropdown
+            cacheUsers([]); // Cache the empty list
+            showCustomAlert("Operator list is empty on the server.");
+        } else {
+            // fetchUsersFromFirebase itself might have shown an error if it returned null due to fetch failure
+            // If it resolved to null or undefined without throwing an error that it caught itself:
+            showCustomAlert("Failed to update operator list. Server might be unreachable or returned unexpected data.");
+        }
+    } catch (error) {
+        // This catch is for errors thrown by fetchUsersFromFirebase if it doesn't handle them internally
+        console.error("Error forcing refresh of operator list:", error);
+        showCustomAlert("An error occurred while refreshing the operator list.");
+    } finally {
+        if (refreshButton) {
+            refreshButton.textContent = originalButtonText;
+            // refreshButton.disabled = false;
+        }
+        closeSidePanel(); // Close panel after attempt
+    }
+}
