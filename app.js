@@ -932,22 +932,28 @@ function checkForUpdates() {
     });
   }
 }
-const FIREBASE_DB_URL = "https://li-chuan-user-name-default-rtdb.asia-southeast1.firebasedatabase.app";
+const SUPABASE_URL = "https://jbpvqlvlokvqpkulisxi.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpicHZxbHZsb2t2cXBrdWxpc3hpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjAwNTE3NzYsImV4cCI6MjA3NTYyNzc3Nn0.cwCoHFCy3K_HdTIIk_jJUCgMXIdub2HbnxqTETBKans";
 
-// Fetch users from Firebase (without SDK)
-async function fetchUsersFromFirebase() {
-  const url = `${FIREBASE_DB_URL}/pwauser.json`;
+// Fetch users from Supabase
+async function fetchUsersFromSupabase() {
+  const url = `${SUPABASE_URL}/rest/v1/profiles?select=user_name&shift=eq.Morning&is_active=eq.true&role=eq.warehouse_staff`;
 
   try {
-    const response = await fetch(url);
+    const response = await fetch(url, {
+      headers: {
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+      }
+    });
     if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
 
     const data = await response.json();
-    if (!data) throw new Error("No data found");
+    if (!data || data.length === 0) throw new Error("No data found");
 
-    return Object.entries(data).map(([id, userData]) => ({
-      id,
-      name: typeof userData === "string" ? userData.replace(/"/g, "") : userData.name || Object.values(userData)[0] || "Unknown",
+    return data.map((user, index) => ({
+      id: index.toString(),
+      name: user.user_name
     }));
   } catch (error) {
     console.error("Error fetching users:", error);
@@ -959,71 +965,31 @@ async function fetchUsersFromFirebase() {
 // Populate dropdown with users
 async function populateUserDropdown() {
   const counterSelect = document.getElementById("counterSelect");
-  if (!counterSelect) {
-    console.error("Counter select dropdown not found during populateUserDropdown.");
+
+  // Check cache first
+  const cachedData = getUsersFromCache();
+  if (cachedData) {
+    populateDropdownWithData(cachedData);
     return;
   }
 
-  const cacheResult = getUsersFromCache();
-  let currentUsers = cacheResult.users;
+  // Clear existing options except placeholder
+  counterSelect.innerHTML = counterSelect.options[0].outerHTML;
 
-  if (cacheResult.exists && currentUsers && currentUsers.length > 0) {
-    console.log("Populating dropdown from cache (might be stale).");
-    populateDropdownWithData(currentUsers);
-  } else {
-    // Ensure dropdown is at least reset to placeholder if no cache
-    populateDropdownWithData(null); 
-  }
+  // Fetch users from Supabase
+  const users = await fetchUsersFromSupabase();
+  if (users.length === 0) return;
 
-  if (cacheResult.isStale || !cacheResult.exists) {
-    if (navigator.onLine) {
-      console.log(cacheResult.exists ? "Cache is stale, fetching fresh data." : "No cache, fetching data.");
-      try {
-        const fetchedUsers = await fetchUsersFromFirebase();
-        if (fetchedUsers && fetchedUsers.length > 0) {
-          console.log("Successfully fetched new user data.");
-          populateDropdownWithData(fetchedUsers);
-          cacheUsers(fetchedUsers); // Update cache with fresh data
-          // If stale cache was being used, this will overwrite it with fresh data and new timestamp.
-          // If cache was non-existent, this creates it.
-        } else if (!cacheResult.exists || (cacheResult.exists && (!currentUsers || currentUsers.length === 0))) {
-          // Fetch returned no users AND there was no usable cache (neither fresh nor stale)
-          console.log("Fetch returned no users and no usable cache existed.");
-          showCustomAlert("Operator list could not be loaded from the server.");
-          // Dropdown would have already been cleared or set to placeholder by populateDropdownWithData(null)
-        } else {
-          // Fetch returned no users, but we might be showing stale data, which is fine.
-          console.log("Fetch returned no new users, continuing with stale data if available.");
-        }
-      } catch (error) {
-        console.error("Error fetching users from Firebase:", error);
-        if (!currentUsers || currentUsers.length === 0) {
-          // Only show alert if we don't even have stale data to show
-          showCustomAlert("Failed to fetch operator list. Check your internet connection.");
-        }
-      }
-    } else { // Offline
-      if (!cacheResult.exists && (!currentUsers || currentUsers.length === 0)) {
-        // Offline and no cache at all (not even stale)
-        console.log("Offline and no user cache available.");
-        showCustomAlert("You are offline. Operator list cannot be loaded without a connection or local cache.");
-      } else if (cacheResult.exists && (!currentUsers || currentUsers.length === 0)) {
-        // This case should ideally not happen if exists = true means users is not null/empty
-        // but as a fallback.
-        console.log("Offline, cache existed but was empty. This state should be rare.");
-        showCustomAlert("You are offline. Operator list seems empty in local cache.");
-      } else {
-        // Offline but using cached data (fresh or stale)
-        console.log("Offline, using cached user data.");
-        if(cacheResult.isStale){
-            showCustomAlert("You are offline. Displaying potentially outdated operator list from cache.");
-        }
-      }
-    }
-  } else {
-    // Cache exists and is not stale. Already populated.
-    console.log("Using fresh user data from cache.");
-  }
+  users.forEach(user => {
+    const option = document.createElement("option");
+    option.value = user.name;
+    option.textContent = user.name;
+    option.dataset.id = user.id;
+    counterSelect.appendChild(option);
+  });
+
+  // Cache results for 12 hours
+  cacheUsers(users);
 }
 
 // Cache users data for 12 hours
@@ -1034,44 +1000,24 @@ function cacheUsers(users) {
 // Get users from cache if valid (12 hours = 43200000 ms)
 function getUsersFromCache() {
   const cachedData = localStorage.getItem("userCache");
-  if (!cachedData) return { users: null, isStale: false, exists: false };
+  if (!cachedData) return null;
 
-  try {
-    const { timestamp, users } = JSON.parse(cachedData);
-    if (!users || !timestamp) { // Basic validation of cache structure
-        localStorage.removeItem("userCache");
-        return { users: null, isStale: false, exists: false };
-    }
-    const isStale = (Date.now() - timestamp) >= 43200000;
-    return { users, isStale, exists: true };
-  } catch (error) {
-    console.error("Error parsing user cache:", error);
-    localStorage.removeItem("userCache"); // Remove corrupted cache
-    return { users: null, isStale: false, exists: false };
-  }
+  const { timestamp, users } = JSON.parse(cachedData);
+  return Date.now() - timestamp < 43200000 ? users : (localStorage.removeItem("userCache"), null);
 }
 
 // Populate dropdown with cached data
 function populateDropdownWithData(users) {
   const counterSelect = document.getElementById("counterSelect");
-  // Ensure counterSelect exists
-  if (!counterSelect) {
-      console.error("counterSelect element not found");
-      return;
-  }
-  // Preserve the first (placeholder) option if it exists
-  const placeholderOption = counterSelect.options[0] ? counterSelect.options[0].outerHTML : '<option value="">盘点人员 | Operator</option>';
-  counterSelect.innerHTML = placeholderOption;
+  counterSelect.innerHTML = counterSelect.options[0].outerHTML;
 
-  if (users && users.length > 0) {
-    users.forEach(user => {
-      const option = document.createElement("option");
-      option.value = user.name;
-      option.textContent = user.name;
-      option.dataset.id = user.id; // Assuming user objects have an id
-      counterSelect.appendChild(option);
-    });
-  }
+  users.forEach(user => {
+    const option = document.createElement("option");
+    option.value = user.name;
+    option.textContent = user.name;
+    option.dataset.id = user.id;
+    counterSelect.appendChild(option);
+  });
 }
 
 document.addEventListener("DOMContentLoaded", function() {
@@ -1167,7 +1113,7 @@ async function forceRefreshOperatorList() {
     // Optional: Disable button refreshButton.disabled = true;
 
     try {
-        const users = await fetchUsersFromFirebase();
+        const users = await fetchUsersFromSupabase();
         if (users && users.length > 0) {
             populateDropdownWithData(users);
             cacheUsers(users);
