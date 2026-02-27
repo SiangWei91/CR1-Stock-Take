@@ -167,12 +167,12 @@ const products = [
         scanned: false
     },
     {
-        barcode: "10110.1",
+        barcode: "10110.2",
         name: "1年 - 鱼饺 FISH DUMPLING 1 Year",
         packaging: "10's x 60trays",
         skus: [
-            { type: "CTN", name: "1年 - 鱼饺 FISH DUMPLING 1 Year", packaging: "10's x 60trays", itemCode: "10110.1" },
-            { type: "PKT", name: "1年 - 鱼饺 FISH DUMPLING 1 Year", packaging: "10's/tray", itemCode: "10110.2" }
+            { type: "CTN", name: "1年 - 鱼饺 FISH DUMPLING 1 Year", packaging: "10's x 60trays", itemCode: "10110.2" },
+            { type: "PKT", name: "1年 - 鱼饺 FISH DUMPLING 1 Year", packaging: "10's/tray", itemCode: "10110.3" }
         ],
         scanned: false
     },
@@ -223,7 +223,7 @@ const products = [
         scanned: false
     },
     {
-        barcode: "RM051",
+        barcode: "RM049",
         name: "Squid / 苏东",
         packaging: "20kg",
         skus: [
@@ -232,11 +232,11 @@ const products = [
         scanned: false
     },
     {
-        barcode: "SU15",
+        barcode: "RM061.1",
         name: "黄尾鱼 YELLOW TAIL FISH",
         packaging: "20kg",
         skus: [
-            { type: "CTN", name: "黄尾鱼 YELLOW TAIL FISH", packaging: "20kg", itemCode: "SU15" }
+            { type: "CTN", name: "黄尾鱼 YELLOW TAIL FISH", packaging: "20kg", itemCode: "RM061.1" }
         ],
         scanned: false
     }
