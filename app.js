@@ -1,5 +1,15 @@
-// 示例产品数据
-const products = [
+// ============================================================================
+// Product list comes from Supabase (list_key='cr1-stock-take').
+// Cached in localStorage and only re-fetched when user clicks the title (no scan records in progress).
+// Each item has a `skus` JSONB array for CTN/PKT variants.
+// ============================================================================
+
+const PRODUCT_LIST_KEY = 'cr1-stock-take';
+const STORAGE_PRODUCTS = 'masterProductList_cr1';
+
+let products = [];
+
+const PRODUCTS_FALLBACK = [
     {
         barcode: "10110",
         name: "鱼饺 10粒 FISH DUMPLING 10's",
@@ -241,23 +251,82 @@ const products = [
         scanned: false
     }
 ];
+
 let currentProduct = null;
 let scanRecords = [];
 
+async function fetchProductsFromDB() {
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    const { data, error } = await supabaseClient
+        .from('app_product_list_items')
+        .select('barcode, name, packing_size, skus')
+        .eq('list_key', PRODUCT_LIST_KEY)
+        .order('sort_order');
+    if (error) throw error;
+    return data.map(r => ({
+        barcode: r.barcode,
+        name: r.name,
+        packaging: r.packing_size || '',
+        skus: r.skus || [],
+        scanned: false
+    }));
+}
 
-// 初始化
-// Consolidated window.onload
-window.onload = function() {
+async function ensureProductsLoaded() {
+    const cached = localStorage.getItem(STORAGE_PRODUCTS);
+    if (cached) {
+        products = JSON.parse(cached).map(p => ({ ...p, scanned: false }));
+        return;
+    }
+
+    if (!navigator.onLine) {
+        // Use baked-in fallback if no cache and no internet
+        products = PRODUCTS_FALLBACK.map(p => ({ ...p, scanned: false }));
+        return;
+    }
+
+    try {
+        const fresh = await fetchProductsFromDB();
+        localStorage.setItem(STORAGE_PRODUCTS, JSON.stringify(fresh));
+        products = fresh;
+    } catch (e) {
+        console.error('Failed to fetch products from DB, using fallback:', e);
+        products = PRODUCTS_FALLBACK.map(p => ({ ...p, scanned: false }));
+    }
+}
+
+async function onTitleClick() {
+    // Block update if user has unsubmitted scan records or partial entries
+    if (scanRecords.length > 0) {
+        return;
+    }
+    if (!navigator.onLine) {
+        showCustomAlert('离线状态 Cannot update while offline');
+        return;
+    }
+    if (!confirm('确认从数据库更新列表? Reload list from database?')) return;
+    const loadingOverlay = document.getElementById('loadingOverlay');
+    if (loadingOverlay) loadingOverlay.style.display = 'block';
+    try {
+        const fresh = await fetchProductsFromDB();
+        localStorage.setItem(STORAGE_PRODUCTS, JSON.stringify(fresh));
+        if (loadingOverlay) loadingOverlay.style.display = 'none';
+        showCustomAlert('列表已更新 List updated');
+        setTimeout(() => location.reload(), 800);
+    } catch (e) {
+        if (loadingOverlay) loadingOverlay.style.display = 'none';
+        console.error('Update failed:', e);
+        showCustomAlert('更新失败 Update failed');
+    }
+}
+
+
+// Initialize on page load — fetch products from DB (or cache) before rendering
+window.onload = async function() {
+    await ensureProductsLoaded();
     renderProducts();
     updateProgress();
-    // setupBarcodeInput will handle focusing on barcodeInput
-    setupBarcodeInput(); 
-    // populateUserDropdown is called by DOMContentLoaded, but calling again here ensures it runs if DOMContentLoaded already fired.
-    // However, it's generally better to ensure it's called once. DOMContentLoaded is usually sufficient.
-    // For safety, and given its async nature and internal checks, calling it here might be okay,
-    // but ideally, structure ensures single appropriate call.
-    // Let's rely on DOMContentLoaded for populateUserDropdown and remove it from here if it's redundant.
-    // populateUserDropdown(); // This is called by DOMContentLoaded, likely redundant here.
+    setupBarcodeInput();
 };
 
 function createCustomAlert() {
